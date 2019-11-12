@@ -45,19 +45,35 @@ class CountryBoundaries():
             #    print('index:%d %f %f ' % (idx, c[0], c[1]))
 
     def createBoundaries(self):
-        geo = hou.node('/obj').createNode('geo').createNode('add')
-        geo = geo.geometry()
-        pt0 = geo.createPoint()
-        pt0.setPosition(hou.Vector3(1, 0, 0))
+        line = hou.node('/obj').createNode('geo').createNode('line')
+        g = line.geometry()
+        for item in self.geo[0]:
+            p = g.createPoint()
+            p.setPosition(hou.Vector3(item[0], item[0], 0))
+        # line = hou.node('/obj').createNode('geo').createNode('line')
+        # g = line.geometry().freeze()
+        # p = g.points()[0]
+        # p.setPosition(hou.Vector3(1, 0, 0))
+        # p = g.points()[1]
+        # p.setPosition(hou.Vector3(0, 0, 0))
+        # pt2=g.createPoint()
+        # pt2.setPosition(hou.Vector3(1, 1, 1))
+        #
+        # geo = line.geometry()
+        # geo.clear()  # clear current geo
+        # geo.merge(g)
 
-        pt1 = geo.createPoint()
-        pt1.setPosition(hou.Vector3(0, 1, 0))
-        pt2 = geo.createPoint()
-        pt2.setPosition(hou.Vector3(0, 0, 1))
-        poly = geo.createPolygon()
-        poly.addVertex(pt0);
-        poly.addVertex(pt1);
-        poly.addVertex(pt2);
+        # pt0 = geo.createPoint()
+        # pt0.setPosition(hou.Vector3(1, 0, 0))
+        #
+        # pt1 = geo.createPoint()
+        # pt1.setPosition(hou.Vector3(0, 1, 0))
+        # pt2 = geo.createPoint()
+        # pt2.setPosition(hou.Vector3(0, 0, 1))
+        # poly = geo.createPolygon()
+        # poly.addVertex(pt0);
+        # poly.addVertex(pt1);
+        # poly.addVertex(pt2);
 
 if __name__ == "__main__":
     import os
