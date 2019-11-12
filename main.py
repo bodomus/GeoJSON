@@ -3,7 +3,7 @@
 # from datapackage import Package
 import os
 import json
-
+import hou
 
 # package = Package('https://datahub.io/core/geo-countries/datapackage.json')
 # print(package)
@@ -24,7 +24,7 @@ class CountryBoundaries():
     def getGeometry(self, geo):
         return geo['coordinates']
 
-    def print(self):
+    def prn(self):
         if(self.geo != None):
             print(self.geo)
 
@@ -44,6 +44,30 @@ class CountryBoundaries():
             #    c = point
             #    print('index:%d %f %f ' % (idx, c[0], c[1]))
 
-boundaries = CountryBoundaries('countries.geojson', 'Ukraine')
-boundaries.getCountryBoundaries()
-boundaries.print()
+    def createBoundaries(self):
+        geo = hou.node('/obj').createNode('geo').createNode('add')
+        geo = geo.geometry()
+        pt0 = geo.createPoint()
+        pt0.setPosition(hou.Vector3(1, 0, 0))
+
+        pt1 = geo.createPoint()
+        pt1.setPosition(hou.Vector3(0, 1, 0))
+        pt2 = geo.createPoint()
+        pt2.setPosition(hou.Vector3(0, 0, 1))
+        poly = geo.createPolygon()
+        poly.addVertex(pt0);
+        poly.addVertex(pt1);
+        poly.addVertex(pt2);
+
+if __name__ == "__main__":
+    import os
+    import hou
+    import json
+    import hrpyc
+
+    con, hou = hrpyc.import_remote_module()
+
+    boundaries = CountryBoundaries('countries.geojson', 'Ukraine')
+    boundaries.getCountryBoundaries()
+    boundaries.prn()
+    boundaries.createBoundaries()
