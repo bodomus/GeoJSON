@@ -4,16 +4,31 @@
 import os
 import json
 import hou
-
-# package = Package('https://datahub.io/core/geo-countries/datapackage.json')
-# print(package)
-# print(package.resource_names)
 class CountryBoundaries():
     def __init__(self, dataFile, countryName):
         self.dataFile = dataFile
         self.countryName = countryName
         self.geo = None
-        print 'ver 1.0.0'
+
+    def getversion(self):
+        return 'ver 1.0.3'
+
+    def getcountriesname(self):
+        if (not os.path.isfile(self.dataFile)):
+            return (None, "Invalid file path.")
+        with open(self.dataFile) as json_file:
+            data = json.load(json_file)
+
+            p = data['features']
+            type = data['type']
+            if (type != "FeatureCollection"):
+                return (None, "Invalid format file")
+        list = []
+        for item in p:
+            i = item['properties']
+            list.append({'name': i['ADMIN'], 'shortname': i['ISO_A3']})
+
+        return list
 
     def getCountryByName(self, items, name):
         for item in items:
@@ -21,6 +36,24 @@ class CountryBoundaries():
             if (i['ADMIN'] == name):
                 return (i['ADMIN'], i['ISO_A3'], item['geometry'])
         return None
+
+    def getMinX(self):
+        min = 100000
+        for items in self.geo:
+            for x in items:
+                for z in x:
+                    if (z[0] < min):
+                            min=z[0]
+        return min
+
+    def getMinY(self):
+        min = 100000
+        for items in self.geo:
+            for x in items:
+                for z in x:
+                    if (z[1] < min):
+                        min=z[1]
+        return min
 
     def getGeometry(self, geo):
         dict = {}
@@ -45,6 +78,8 @@ class CountryBoundaries():
                 return (None, "Invalid format file")
             cName, cISO, cGeometry = self.getCountryByName(p, 'Ukraine')
             self.geo = self.getGeometry(cGeometry)
+            self.minX = self.getMinX()
+            self.minY = self.getMinY()
             return self.geo
             # for idx, point in enumerate(g):
             #    c = point
@@ -93,11 +128,11 @@ if __name__ == "__main__":
 
     boundaries = CountryBoundaries('countries.geojson', 'Ukraine')
     list = boundaries.getCountryBoundaries()
+    countries = boundaries.getcountriesname()
+    x = boundaries.getMinX()
+    y = boundaries.getMinY()
     #boundaries.prn()
     for item in list:
         for i in item:
             print 'next'
-
-
-
     #boundaries.createBoundaries()
