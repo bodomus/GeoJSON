@@ -9,9 +9,18 @@ class CountryBoundaries():
         self.dataFile = dataFile
         self.countryName = countryName
         self.geo = None
+        self.usedifferentheightforgroups = True
+
+    # add in version 1.0.4
+    def setdifferentheightflag(self, isUse):
+        self.usedifferentheightforgroups = isUse
+
+    # add in version 1.0.4
+    def getdifferentheightflag(self):
+        return self.usedifferentheightforgroups
 
     def getversion(self):
-        return 'ver 1.0.3'
+        return 'ver 1.0.4'
 
     def getcountriesname(self):
         if (not os.path.isfile(self.dataFile)):
