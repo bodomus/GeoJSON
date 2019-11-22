@@ -4,8 +4,12 @@
 import os
 import json
 import hou
+
+
 class CountryBoundaries():
     def __init__(self, dataFile, countryName):
+        if (not os.path.isfile(dataFile)):
+            raise hou.NodeError("The error occured. File doesnot exist. ")
         self.dataFile = dataFile
         self.countryName = countryName
         self.geo = None
@@ -132,16 +136,34 @@ if __name__ == "__main__":
     import hou
     import json
     import hrpyc
+    from itertools import chain
 
-    #con, hou = hrpyc.import_remote_module()
+    con, hou = hrpyc.import_remote_module()
+    geo = hou.node('/obj').createNode('geo')
 
     boundaries = CountryBoundaries('countries.geojson', 'Ukraine')
     list = boundaries.getCountryBoundaries()
     countries = boundaries.getcountriesname()
+
+    #mENU
+    attribs = [a for a in [1,2,3]]
+
+    #l = chain(*zip(attribs, attribs))
+    # Menu
+    country = []
+    list = boundaries.getcountriesname()
+    for c in list:
+        print c
+        country.append(c.name)
+
     x = boundaries.getMinX()
     y = boundaries.getMinY()
     #boundaries.prn()
-    for item in list:
-        for i in item:
-            print 'next'
+    for x in list:
+        #poly = geo.createPolygon()
+        for y in x:
+            for z in y:
+                #pt = geo.createPoint()
+                #pt.setPosition(hou.Vector3(z.x, z.y, z.z))
+                print hou.Vector3(z.x, z.y, z.z)
     #boundaries.createBoundaries()
