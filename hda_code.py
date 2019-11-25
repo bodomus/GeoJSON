@@ -35,3 +35,19 @@ for ind, x in enumerate(boundaries):
             pt.setPosition(hou.Vector3(z[1] - miny, 0 + ind, z[0] - minx))
             if(addpolygon == 1):
                 poly.addVertex(pt)
+
+                # drop down
+                import os
+                import json
+                import hou
+                from geoJSON import main
+
+                file = hou.ch('geodata')
+                boundaries = main.CountryBoundaries(file, 'Ukraine')
+                countries = boundaries.getcountriesname()
+                cc = []
+                for con in countries:
+                    cc.append(con['shortname'])
+                    cc.append(con['name'] + ',' + con['shortname'])
+
+                #return cc

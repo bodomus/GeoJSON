@@ -7,9 +7,10 @@ import hou
 
 
 class CountryBoundaries():
+
     def __init__(self, dataFile, countryName):
         if (not os.path.isfile(dataFile)):
-            raise hou.NodeError("The error occured. File doesnot exist. ")
+            raise hou.NodeError("The error occured. File does not exist. ")
         self.dataFile = dataFile
         self.countryName = countryName
         self.geo = None
@@ -19,12 +20,20 @@ class CountryBoundaries():
     def setdifferentheightflag(self, isUse):
         self.usedifferentheightforgroups = isUse
 
+    def setcountryName(self, shortName):
+        if(shortName <> None):
+            cName, cISO, cGeometry = self.getCountryByShortName(shortName)
+            self.countryName = cName
+
     # add in version 1.0.4
     def getdifferentheightflag(self):
         return self.usedifferentheightforgroups
 
+    def getcountry(self):
+        return self.countryName
+
     def getversion(self):
-        return 'ver 1.0.4'
+        return 'ver 1.0.5'
 
     def getcountriesname(self):
         if (not os.path.isfile(self.dataFile)):
@@ -50,13 +59,25 @@ class CountryBoundaries():
                 return (i['ADMIN'], i['ISO_A3'], item['geometry'])
         return None
 
+    def getCountryByShortName(self, items, shortname):
+        for item in items:
+            i = item['properties']
+            if (i['ISO_A3'] == shortname):
+                return (i['ADMIN'], i['ISO_A3'], item['geometry'])
+        return None
+
+
     def getMinX(self):
         min = 100000
         for items in self.geo:
             for x in items:
                 for z in x:
-                    if (z[0] < min):
-                            min=z[0]
+                    if(type(z) is float):
+                        if(z < min):
+                            min = z
+                    else:
+                        if (z[0] < min):
+                                min=z[0]
         return min
 
     def getMinY(self):
@@ -64,8 +85,12 @@ class CountryBoundaries():
         for items in self.geo:
             for x in items:
                 for z in x:
-                    if (z[1] < min):
-                        min=z[1]
+                    if (type(z) is float):
+                        if (z < min):
+                            min = z
+                    else:
+                        if (z[1] < min):
+                            min=z[1]
         return min
 
     def getGeometry(self, geo):
@@ -79,7 +104,8 @@ class CountryBoundaries():
             print(self.geo)
 
     def getCountryBoundaries(self):
-
+        if (self.countryName == None):
+            return (None, "Invalid country name.")
         if (not os.path.isfile(self.dataFile)):
             return (None, "Invalid file path.")
         with open(self.dataFile) as json_file:
@@ -89,7 +115,7 @@ class CountryBoundaries():
             type = data['type']
             if (type != "FeatureCollection"):
                 return (None, "Invalid format file")
-            cName, cISO, cGeometry = self.getCountryByName(p, 'Ukraine')
+            cName, cISO, cGeometry = self.getCountryByName(p, self.countryName)
             self.geo = self.getGeometry(cGeometry)
             self.minX = self.getMinX()
             self.minY = self.getMinY()
@@ -136,15 +162,18 @@ if __name__ == "__main__":
     import hou
     import json
     import hrpyc
-    from itertools import chain
+    #from itertools import chain
 
-    con, hou = hrpyc.import_remote_module()
-    geo = hou.node('/obj').createNode('geo')
+    #con, hou = hrpyc.import_remote_module()
+    #geo = hou.node('/obj').createNode('geo')
 
-    boundaries = CountryBoundaries('countries.geojson', 'Ukraine')
+    boundaries = CountryBoundaries('countries.geojson', 'Benin')
     list = boundaries.getCountryBoundaries()
     countries = boundaries.getcountriesname()
-
+    cc = []
+    for con in countries:
+        cc.append(con['name'])
+        cc.append(con['name'])
     #mENU
     attribs = [a for a in [1,2,3]]
 
@@ -152,9 +181,6 @@ if __name__ == "__main__":
     # Menu
     country = []
     list = boundaries.getcountriesname()
-    for c in list:
-        print c
-        country.append(c.name)
 
     x = boundaries.getMinX()
     y = boundaries.getMinY()
@@ -165,5 +191,5 @@ if __name__ == "__main__":
             for z in y:
                 #pt = geo.createPoint()
                 #pt.setPosition(hou.Vector3(z.x, z.y, z.z))
-                print hou.Vector3(z.x, z.y, z.z)
+                print 'e'
     #boundaries.createBoundaries()
