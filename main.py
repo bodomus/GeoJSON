@@ -3,7 +3,8 @@
 # from datapackage import Package
 import os
 import json
-import hou
+import geotest
+#import hou
 
 
 class CountryBoundaries():
@@ -34,6 +35,13 @@ class CountryBoundaries():
 
     def getversion(self):
         return 'ver 1.0.5'
+
+    def getcountriesnamefromfile(self, filename):
+        if (not os.path.isfile(filename)):
+            return (None, "Invalid file path.")
+        with open(filename) as json_file:
+            data = json.load(json_file)
+        return data
 
     def getcountriesname(self):
         if (not os.path.isfile(self.dataFile)):
@@ -103,6 +111,10 @@ class CountryBoundaries():
         if(self.geo != None):
             print(self.geo)
 
+    def writejson(self, filename, data):
+        with open(filename, 'w') as outfile:
+            json.dump(data, outfile)
+
     def getCountryBoundaries(self):
         if (self.countryName == None):
             return (None, "Invalid country name.")
@@ -162,14 +174,16 @@ if __name__ == "__main__":
     import hou
     import json
     import hrpyc
-    #from itertools import chain
+    import geotest
 
-    #con, hou = hrpyc.import_remote_module()
-    #geo = hou.node('/obj').createNode('geo')
-
-    boundaries = CountryBoundaries('countries.geojson', 'Benin')
+    geo = geotest.geotest(geotest.CNTR_BN_01M_2016_3035)
+    geo.process()
+    boundaries = CountryBoundaries('countries.geojson', 'Aruba')
+    print (boundaries)
     list = boundaries.getCountryBoundaries()
     countries = boundaries.getcountriesname()
+    boundaries.writejson("d:/temp/countries.json", countries)
+    countries = boundaries.getcountriesnamefromfile("d:/temp/countries.json")
     cc = []
     for con in countries:
         cc.append(con['name'])
@@ -180,7 +194,7 @@ if __name__ == "__main__":
     #l = chain(*zip(attribs, attribs))
     # Menu
     country = []
-    list = boundaries.getcountriesname()
+    #list = boundaries.getcountriesname()
 
     x = boundaries.getMinX()
     y = boundaries.getMinY()
@@ -191,5 +205,7 @@ if __name__ == "__main__":
             for z in y:
                 #pt = geo.createPoint()
                 #pt.setPosition(hou.Vector3(z.x, z.y, z.z))
-                print 'e'
+                if  (type(z) is float):
+                    break
+                print z[1]
     #boundaries.createBoundaries()

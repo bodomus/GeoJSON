@@ -2,9 +2,18 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$" />
-    <content url="file://$USER_HOME$/Documents/houdini17.5/otls" />
-    <orderEntry type="jdk" jdkName="Python 2.7(Houdini)" jdkType="Python SDK" />
+    <content url="file://$USER_HOME$/Documents/houdini17.5/otls">
+      <sourceFolder url="file://$USER_HOME$/Documents/houdini17.5/otls" isTestSource="false" />
+    </content>
+    <orderEntry type="jdk" jdkName="Python 2.7" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+  <component name="TemplatesService">
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$USER_HOME$/Documents/houdini17.5/otls" />
+      </list>
+    </option>
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="Unittests" />
