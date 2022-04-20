@@ -4,13 +4,15 @@
 import os
 import json
 import geotest
-#import hou
 
 
-class CountryBoundaries():
+# import hou
+
+
+class CountryBoundaries:
 
     def __init__(self, dataFile, countryName):
-        if (not os.path.isfile(dataFile)):
+        if not os.path.isfile(dataFile):
             raise hou.NodeError("The error occured. File does not exist. ")
         self.dataFile = dataFile
         self.countryName = countryName
@@ -22,7 +24,7 @@ class CountryBoundaries():
         self.usedifferentheightforgroups = isUse
 
     def setcountryName(self, shortName):
-        if(shortName <> None):
+        if (shortName <> None):
             cName, cISO, cGeometry = self.getCountryByShortName(shortName)
             self.countryName = cName
 
@@ -74,18 +76,17 @@ class CountryBoundaries():
                 return (i['ADMIN'], i['ISO_A3'], item['geometry'])
         return None
 
-
     def getMinX(self):
         min = 100000
         for items in self.geo:
             for x in items:
                 for z in x:
-                    if(type(z) is float):
-                        if(z < min):
+                    if (type(z) is float):
+                        if (z < min):
                             min = z
                     else:
                         if (z[0] < min):
-                                min=z[0]
+                            min = z[0]
         return min
 
     def getMinY(self):
@@ -98,17 +99,17 @@ class CountryBoundaries():
                             min = z
                     else:
                         if (z[1] < min):
-                            min=z[1]
+                            min = z[1]
         return min
 
     def getGeometry(self, geo):
         dict = {}
-        for index, item in enumerate (geo['coordinates']):
+        for index, item in enumerate(geo['coordinates']):
             dict[str(index)] = item
         return geo['coordinates']
 
     def prn(self):
-        if(self.geo != None):
+        if (self.geo != None):
             print(self.geo)
 
     def writejson(self, filename, data):
@@ -127,6 +128,7 @@ class CountryBoundaries():
             type = data['type']
             if (type != "FeatureCollection"):
                 return (None, "Invalid format file")
+            print(self.countryName)
             cName, cISO, cGeometry = self.getCountryByName(p, self.countryName)
             self.geo = self.getGeometry(cGeometry)
             self.minX = self.getMinX()
@@ -144,30 +146,31 @@ class CountryBoundaries():
     #             for z in i:
     #                 print z
 
-        # line = hou.node('/obj').createNode('geo').createNode('line')
-        # g = line.geometry().freeze()
-        # p = g.points()[0]
-        # p.setPosition(hou.Vector3(1, 0, 0))
-        # p = g.points()[1]
-        # p.setPosition(hou.Vector3(0, 0, 0))
-        # pt2=g.createPoint()
-        # pt2.setPosition(hou.Vector3(1, 1, 1))
-        #
-        # geo = line.geometry()
-        # geo.clear()  # clear current geo
-        # geo.merge(g)
+    # line = hou.node('/obj').createNode('geo').createNode('line')
+    # g = line.geometry().freeze()
+    # p = g.points()[0]
+    # p.setPosition(hou.Vector3(1, 0, 0))
+    # p = g.points()[1]
+    # p.setPosition(hou.Vector3(0, 0, 0))
+    # pt2=g.createPoint()
+    # pt2.setPosition(hou.Vector3(1, 1, 1))
+    #
+    # geo = line.geometry()
+    # geo.clear()  # clear current geo
+    # geo.merge(g)
 
-        # pt0 = geo.createPoint()
-        # pt0.setPosition(hou.Vector3(1, 0, 0))
-        #
-        # pt1 = geo.createPoint()
-        # pt1.setPosition(hou.Vector3(0, 1, 0))
-        # pt2 = geo.createPoint()
-        # pt2.setPosition(hou.Vector3(0, 0, 1))
-        # poly = geo.createPolygon()
-        # poly.addVertex(pt0);
-        # poly.addVertex(pt1);
-        # poly.addVertex(pt2);
+    # pt0 = geo.createPoint()
+    # pt0.setPosition(hou.Vector3(1, 0, 0))
+    #
+    # pt1 = geo.createPoint()
+    # pt1.setPosition(hou.Vector3(0, 1, 0))
+    # pt2 = geo.createPoint()
+    # pt2.setPosition(hou.Vector3(0, 0, 1))
+    # poly = geo.createPolygon()
+    # poly.addVertex(pt0);
+    # poly.addVertex(pt1);
+    # poly.addVertex(pt2);
+
 
 if __name__ == "__main__":
     import os
@@ -176,7 +179,7 @@ if __name__ == "__main__":
     import hrpyc
     import geotest
 
-    geo = geotest.geotest(geotest.CNTR_BN_01M_2016_3035)
+    geo = geotest.GeoTest(geotest.CNTR_BN_01M_2016_3035)
     geo.process()
     boundaries = CountryBoundaries('countries.geojson', 'Aruba')
     print (boundaries)
@@ -188,24 +191,24 @@ if __name__ == "__main__":
     for con in countries:
         cc.append(con['name'])
         cc.append(con['name'])
-    #mENU
-    attribs = [a for a in [1,2,3]]
+    # mENU
+    attribs = [a for a in [2, 1, 3]]
 
-    #l = chain(*zip(attribs, attribs))
+    # l = chain(*zip(attribs, attribs))
     # Menu
     country = []
-    #list = boundaries.getcountriesname()
+    # list = boundaries.getcountriesname()
 
     x = boundaries.getMinX()
     y = boundaries.getMinY()
-    #boundaries.prn()
+    # boundaries.prn()
     for x in list:
-        #poly = geo.createPolygon()
+        # poly = geo.createPolygon()
         for y in x:
             for z in y:
-                #pt = geo.createPoint()
-                #pt.setPosition(hou.Vector3(z.x, z.y, z.z))
-                if  (type(z) is float):
+                # pt = geo.createPoint()
+                # pt.setPosition(hou.Vector3(z.x, z.y, z.z))
+                if (type(z) is float):
                     break
                 print z[1]
-    #boundaries.createBoundaries()
+    # boundaries.createBoundaries()
