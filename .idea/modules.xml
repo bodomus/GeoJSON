@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/GeoJSON.iml" filepath="$PROJECT_DIR$/.idea/GeoJSON.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/geoJSON.iml" filepath="$PROJECT_DIR$/.idea/geoJSON.iml" />
     </modules>
   </component>
 </project>

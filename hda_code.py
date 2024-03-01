@@ -1,7 +1,7 @@
 import os
 import json
 import hou
-from geoJSON import main
+import main
 
 # HDA params
 # geodata
@@ -15,37 +15,31 @@ node = hou.pwd()
 geo = node.geometry()
 
 file = hou.ch('geodata')
-differentheight = int(hou.ch('differentheight'))
-addpolygon = int(hou.ch('addpolygon'))
+different_height = int(hou.ch('differentheight'))
+add_polygon = int(hou.ch('addpolygon'))
 country = hou.ch('countries')
-print 'Country'
-print (country)
+print(country)
 
 minx = 0
 miny = 0
-if (country <> None):
-    print (country)
+if country is not None:
     cb = main.CountryBoundaries(file, country)
 
-    boundaries = cb.getCountryBoundaries()
-    if (int(hou.ch('normalizecoordinate'))):
-        minx = cb.getMinX()
-        miny = cb.getMinY()
+    boundaries = cb.get_country_boundaries()
+    if int(hou.ch('normalizecoordinate')):
+        minx = cb.get_min_x()
+        miny = cb.get_min_y()
 
     for ind, x in enumerate(boundaries):
         poly = geo.createPolygon()
-        if (differentheight == 0):
+        if different_height == 0:
             ind = 0
         for y in x:
             for z in y:
                 pt = geo.createPoint()
                 pt.setPosition(hou.Vector3(z[1] - miny, 0 + ind, z[0] - minx))
-                if (addpolygon == 1):
+                if add_polygon == 1:
                     poly.addVertex(pt)
-
-
-
-
                     ###
 
                     # import os
